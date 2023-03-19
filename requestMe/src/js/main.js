@@ -6,15 +6,41 @@ const configEl = document.getElementById('config');
 const url = 'https://jsonplaceholder.typicode.com/posts';
 const url_users = 'https://jsonplaceholder.typicode.com/users';
 
-const get = () => {
+const newAxios = axios.create({
+    baseURL: 'https://egg.api.com'
+})
+newAxios.defaults.headers.common['Authorization'] = 'New Axios';
 
+axios.defaults.baseURL = 'https://jsonplaceholder.typicode.com/';
+
+axios.interceptors.request.use(( config ) => {
+    config.headers.Authorization = 'dsfkandcuilmxmcmsaxZXdkaxmkc';
+    console.log(config.headers);
+    return config;
+}, ( error ) => {
+    console.log('errooo');
+    return new Promise.reject(error);
+});
+
+
+// #> Intercept Response
+axios.interceptors.response.use(( response ) => {
+    console.log(config.headers);
+    return response;
+}, ( error ) => {
+    console.log('errooo');
+    return new Promise.reject(error);
+});
+
+const get = () => {
     const config = {
         params: {
             _limit: 5
         }
     };
 
-    axios.get(url, config)
+    // #> Desse modo apenas passa o endpoint, já que ele irá incluir autmaticamente a `baseURL`
+    axios.get('posts', config)
         .then(( response ) => renderOutput(response));
 
     console.log('get');
@@ -27,7 +53,7 @@ const post = () => {
         userID: 1,
     };
 
-    axios.post(url, data)
+    axios.post('posts', data)
         .then(( response ) => renderOutput(response));
 
     console.log('post');
@@ -52,7 +78,7 @@ const patch = () => {
         title: 'Dev Punk da Silva',
     };
 
-    axios.patch(`${url}/1`)
+    axios.patch('posts/1')
         .then(( response ) => renderOutput(response));
 
     console.log('patch');
@@ -67,7 +93,7 @@ const del = () => {
 
 const multiple = () => {
     Promisse.all([
-        axios.get(`${url}?_limit=5`),
+        axios.get('posts?_limit=5'),
         axios.get(`${url_users}?_limit=5`),
     ]).then(( response ) =>  {
         console.table(response[0].data);
@@ -93,17 +119,41 @@ const transform = () => {
         }],
     };
 
-    axios.get(url, config)
+    axios.get('posts', config)
         .then(( response ) => renderOutput(response));
 
     console.log('transform');
 }
 
 const errorHandling = () => {
+    axios.get(`${url}/messi-careca123`)
+        .then(( response ) => renderOutput(response))
+        .catch(({ response }) => {
+            renderOutput(response);
+            console.log(response.data);
+            console.log(response.status);
+            console.log(response.headers);
+        });
+
     console.log('errorHandling');
 }
 
 const cancel = () => {
+    const controller = new AbortController();
+    const config = {
+        params: {
+            _limit: 5
+        },
+        signal: controller.signal
+    };
+
+    axios.get(url, config)
+        .then(( response ) => renderOutput(response))
+        .catch(( e ) => {
+            console.log("MENSAGEM DE ERRO: ", e.message);
+        });
+
+    controller.abort();
     console.log('cancel');
 }
 

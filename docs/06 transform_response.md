@@ -4,7 +4,7 @@
 
 Usado quando precisa adicionar um campo assim que for pego o payload (dados);
 
-**Ex |> **
+**Ex |>**
 
 ```js
 const transform = () => {

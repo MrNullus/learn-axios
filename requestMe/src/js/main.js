@@ -4,6 +4,20 @@ const headersEl = document.getElementById('headers');
 const configEl = document.getElementById('config');
 
 const get = () => {
+    // A utilização do Axios se dá em implementar a variavel `axios`;
+    // Para o método GET é necessario no mínimo dois atributos dentro
+    // ¬ do objeto de configuração, sendo eles: o método e a url;
+    // Pode-se usar o atributo params para passar os parametros da requisição
+    // ¬ dentro dele usa-se o nome do parametro e o seu valor
+    axios.get('https://jsonplaceholder.typicode.com/posts', {
+        params: {
+            _limit: 5
+        }
+    })
+        .then(( response ) => {
+            renderOutput(response);
+        });
+
     console.log('get');
 }
 

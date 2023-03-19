@@ -52,3 +52,5 @@ axios.get('user/?ID=12345')
     // manipular sempre que for executado
   });
 ```
+### Install
+Para instalar vá a documentação do Axios;
